@@ -1,5 +1,4 @@
 import requests
-import click
 
 class SMS:
     def __init__(self, number, text, api_key):
@@ -11,30 +10,29 @@ class SMS:
     def sendSMS(self):
         res = requests.post(self.url, data=self.data).json()
         if res['success']:
-            click.secho("[+] Message sent successfully!")
+            print("[+] Message sent successfully!")
         else:
-            click.secho("[-] Couldn't send message!")
+            print("[-] Couldn't send message!")
             if 'error' in res:
-                click.secho('[-] ' + res['error'])
+                print('[-]', res['error'])
             else:
-                click.secho('[-] Unknown error occurred!')
+                print('[-] Unknown error occurred!')
 
 def main():
     try:
-        number = click.prompt('Enter number (Include country code, ex. +1)', type=str)
-        text = str(input("Enter message: "))
-        api_key = click.prompt('Enter API', type=str) # TextBelt API
-    except:
-        click.secho("\n[-] Quitting")
+        number = input('Enter number (Include country code, ex. +1): ')
+        text = input("Enter message: ")
+        api_key = input('Enter API: ')  # TextBelt API
+    except KeyboardInterrupt:
+        print("\n[-] Quitting")
         exit(0)
 
     process = SMS(number, text, api_key)
-    if click.confirm('Do you want to send the message?'):
+    if input('Do you want to send the message? (y/n): ').lower() == 'y':
         process.sendSMS()
     else:
-        click.secho("[-] Quitting")
+        print("[-] Quitting")
         exit(0)
 
 if __name__ == '__main__':
     main()
-
